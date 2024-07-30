@@ -14,7 +14,7 @@ const Login = () => {
     setErrorMessage('');
 
     try {
-      const response = await axios.post('http://localhost:3001/api/auth/login', { email, password });
+      const response = await axios.post('http://localhost:3002/api/auth/login', { email, password });
       if (response.data.success) {
         navigate('/profile');
       } else {

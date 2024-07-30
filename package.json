@@ -11,6 +11,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-session": "^1.18.0",
+    "multer": "^1.4.5-lts.1",
     "mysql2": "^3.10.3",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
@@ -46,7 +47,7 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:3001",
+  "proxy": "http://localhost:3002",
   "devDependencies": {
     "concurrently": "^8.2.2"
   }

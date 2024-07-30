@@ -34,5 +34,6 @@ const User = sequelize.define('User', {
   createdAt: 'created_at',
   updatedAt: false
 });
+  
 
 module.exports = User;
