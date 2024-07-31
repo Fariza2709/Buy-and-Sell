@@ -13,7 +13,7 @@ const CreateAd = () => {
     title: '',
     description: '',
     price: '',
-    currency: '',
+    currency: 'KZT',
     images: [],
     location: '',
     contactPerson: '',
@@ -25,7 +25,6 @@ const CreateAd = () => {
   const [rotation, setRotation] = useState({});
   const [charCount, setCharCount] = useState(0);
   const [isActive, setIsActive] = useState(false);
-  const [location, setLocation] = useState('');
   const [error, setError] = useState('');
 
   const openModal = () => setModalOpen(true);
@@ -106,11 +105,11 @@ const CreateAd = () => {
                 formattedLocation += ', район ' + (district || county);
               }
 
-              setLocation(formattedLocation);
-              setFormData((prevData) => ({
+              setFormData(prevData => ({
                 ...prevData,
                 location: formattedLocation
               }));
+              setError('');
             })
             .catch(err => {
               console.error('Ошибка при получении адреса:', err);
@@ -152,35 +151,36 @@ const CreateAd = () => {
     }));
   };
 
-
   const handlePublish = async () => {
     try {
-      if (!formData.title || !formData.description || !formData.price || !formData.currency || !formData.location || !formData.contactPerson || !formData.email || !formData.phone) {
+      const { title, description, price, currency, location, contactPerson, email, phone } = formData;
+
+      if (!title || !description || !price || !currency || !location || !contactPerson || !email || !phone) {
         alert('Пожалуйста, заполните все обязательные поля.');
         return;
       }
   
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailPattern.test(formData.email)) {
+      if (!emailPattern.test(email)) {
         alert('Введите корректный адрес электронной почты.');
         return;
       }
   
       const phonePattern = /^\+?[1-9]\d{1,14}$/;
-      if (!phonePattern.test(formData.phone)) {
+      if (!phonePattern.test(phone)) {
         alert('Введите корректный номер телефона.');
         return;
       }
   
       const adData = {
-        title: formData.title,
-        description: formData.description,
-        price: formData.price,
-        currency: formData.currency,
-        location: formData.location,
-        contactPerson: formData.contactPerson,
-        email: formData.email,
-        phone: formData.phone,
+        title,
+        description,
+        price,
+        currency,
+        location,
+        contactPerson,
+        email,
+        phone,
         images: formData.images
       };
   
@@ -196,6 +196,7 @@ const CreateAd = () => {
         throw new Error('Ошибка при публикации объявления');
       }
   
+      alert('Объявление успешно опубликовано!');
       setFormData({
         title: '',
         description: '',
@@ -207,20 +208,25 @@ const CreateAd = () => {
         email: '',
         phone: ''
       });
-  
+
+      setActiveCategory('');
+      setActiveSubCategory('');
+      setActiveSubSubCategory('');
       setPreviews({});
+      setRotation({});
+      setCharCount(0);
+      setError('');
   
-      alert('Объявление успешно опубликовано!');
     } catch (error) {
       console.error(error);
       alert('Произошла ошибка при публикации объявления');
     }
   };
-  
+
   return (
     <div>
       {isModalOpen && (
-        <div className="relative " id="overlay">
+        <div className="relative" id="overlay">
           <div className="w-900 h-500 m-auto bg-white absolute top-5 right-48 border border-solid rounded-md" id="modal">
             <div className="">
               <span id="closeCategory" className="close absolute right-3 top-0 cursor-pointer" onClick={closeModal}>&times;</span>
@@ -242,7 +248,7 @@ const CreateAd = () => {
         />
       )}
 
-      <div className="m-auto mt-10 border border-white border-solid w-10/12 bg-white rounded-sm" id="createAnAd">
+      <div className="m-auto mt-10 border border-gray-300 border-solid w-10/12 bg-white rounded-sm" id="createAnAd">
         <div className="describeInDetail">
           <form className="flex flex-col justify-center items-start p-10">
             <p className="mb-5">Создать объявление</p>
@@ -256,6 +262,7 @@ const CreateAd = () => {
               required 
               minLength="16" 
               maxLength="70"
+              value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
             />
             <div className="flex justify-between items-end w-9/12">
@@ -277,7 +284,7 @@ const CreateAd = () => {
         </div>
       </div>
 
-      <div className="addPhoto mt-6 ml-28 w-10/12 bg-white h-96 pl-10">
+      <div className="addPhoto mt-6 ml-28 w-10/12 bg-white h-96 pl-10 border border-gray-300 border-solid">
         <p className="pt-4">Фото</p>
         <p>Первое фото будет на обложке объявления. Перетащите, чтобы изменить порядок.</p>
         <div className="grid grid-cols-3 gap-4 pt-4 w-3/6">
@@ -315,7 +322,7 @@ const CreateAd = () => {
                     <img
                       src="/icons/trash.svg"
                       alt="Delete"
-                      onClick={(e) => { e.stopPropagation();  e.preventDefault(); handleDelete(i); }}
+                      onClick={(e) => { e.stopPropagation(); e.preventDefault(); handleDelete(i); }}
                       className="absolute bottom-2 bg-white right-0.5 w-4 h-4 cursor-pointer z-10"
                     />
                   </>
@@ -334,7 +341,7 @@ const CreateAd = () => {
         </div>
       </div>
 
-      <div className="mt-6 ml-28 w-10/12 bg-white pl-10 pb-9">
+      <div className="mt-6 ml-28 w-10/12 bg-white pl-10 pb-9 border border-gray-300 border-solid">
         <p className="pt-4 pb-3">Описание*</p>
         <textarea 
           className="border border-solid border-gray-700"
@@ -342,6 +349,7 @@ const CreateAd = () => {
           cols="86" rows="15"
           required minLength="40"
           maxLength="9000" 
+          value={formData.description}
           onChange={(e) => {
             handleCharCounter(e);
             setFormData({ ...formData, description: e.target.value });
@@ -372,28 +380,27 @@ const CreateAd = () => {
               onChange={handleChange}
               required
             />
-        </div>
+          </div>
 
-        <div className="form-group">
-          <label htmlFor="currency" className="form-label">Валюта</label>
-          <select
-            id="currency"
-            name="currency"
-            className="form-select"
-            value={formData.currency}
+          <div className="form-group">
+            <label htmlFor="currency" className="form-label">Валюта</label>
+            <select
+              id="currency"
+              name="currency"
+              className="form-select"
+              value={formData.currency}
               onChange={handleChange}
-            required
-          >
-            <option value="KZT">Тенге (KZT)</option>
-            <option value="USD">Доллар США (USD)</option>
-            <option value="EUR">Евро (EUR)</option>
-          </select>
-        </div>
-</form>
-
+              required
+            >
+              <option value="KZT">Тенге (KZT)</option>
+              <option value="USD">Доллар США (USD)</option>
+              <option value="EUR">Евро (EUR)</option>
+            </select>
+          </div>
+        </form>
       </div>
 
-      <div className="mt-6 ml-28 w-10/12 bg-white pl-10 h-40">
+      <div className="mt-6 ml-28 w-10/12 bg-white pl-10 h-40 border border-gray-300 border-solid">
         <h3 className="pt-4 pb-3 w-1/5">Автопродление</h3>
         <p
           className={`w-1/3 ${isActive ? 'hidden' : 'block'}`}
@@ -418,7 +425,7 @@ const CreateAd = () => {
         </button>
       </div>
 
-      <div className="flex justify-start items-center mt-6 ml-28 w-10/12 bg-white pl-10 h-20">
+      <div className="flex justify-start items-center mt-6 ml-28 w-10/12 bg-white pl-10 h-20 border border-gray-300 border-solid">
         <label htmlFor="w-6/12">
           Местоположение*
           <input
@@ -427,7 +434,7 @@ const CreateAd = () => {
             placeholder="Местоположение"
             id="inputLocation"
             name="location"
-            value={location}
+            value={formData.location}
             onClick={handleGetLocation} 
             readOnly
           />
@@ -435,7 +442,7 @@ const CreateAd = () => {
         {error && <p className="text-red-500">{error}</p>}
       </div>
 
-      <div className="contactInformation mt-6 ml-28 w-10/12 bg-white pl-10 h-48">
+      <div className="contactInformation mt-6 ml-28 w-10/12 bg-white pl-10 h-48 border border-gray-300 border-solid">
         <form className="flex flex-col pt-10">
           <label htmlFor="contactPerson" className="labelContactInformation">Контактное лицо
             <input 
@@ -444,6 +451,7 @@ const CreateAd = () => {
               name="contactPerson" 
               id="contactPerson" 
               required 
+              value={formData.contactPerson}
               onChange={(e) => setFormData({ ...formData, contactPerson: e.target.value })}
             />
           </label>
@@ -455,6 +463,7 @@ const CreateAd = () => {
               id="email" 
               className="border border-solid border-gray-400 rounded-sm ml-14 mb-4" 
               required 
+              value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             />
           </label>
@@ -466,13 +475,14 @@ const CreateAd = () => {
               name="phone" 
               id="phone" 
               required 
+              value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
             />
           </label>
         </form>
       </div>
 
-      <div className="flex justify-end items-center mt-6 ml-28 w-10/12 bg-white pl-10 h-20">
+      <div className="flex justify-end items-center mt-6 ml-28 w-10/12 bg-white pl-10 h-20 border border-gray-300 border-solid mb-12">
         <button 
           type="button" 
           className="w-36 h-9 bg-blue-400 rounded-sm mr-10"
@@ -483,7 +493,7 @@ const CreateAd = () => {
         <button 
           type="button" 
           onClick={handlePublish} 
-          className="w-36 h-9 bg-green-400 rounded-sm"
+          className="w-36 h-9 bg-green-400 rounded-sm mr-7"
         >
           Опубликовать
         </button>

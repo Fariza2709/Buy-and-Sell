@@ -1,45 +1,20 @@
 import React from "react";
+import { Link, Outlet } from 'react-router-dom';
 
 const AnnouncementPages = () => {
   return (
-  <div className="announcementPages" id="announcementPages">
-  <div className="listAnnouncement">
-    <p className="listOfConditions" id="yourAdsActivePage">Активные</p>
-    <p className="listOfConditions" id="yourAdsNonActivePage">Неактивные</p>
-    <p className="listOfConditions" id="yourAdsNonUnpaidPage">Неоплаченные</p>
-    <p className="listOfConditions" id="yourAdsNonAwaitingPage">Ожидающие</p>
-    <div className="yourAdsPart" id="yourAdsActivePart">
-      <div className="yourAds_wrapper">
-        <p className="descAds">Активные объявления отображаются здесь до истечения их срока</p>
-          <p className="validityPeriod">Эти объявления видны всем. Срок их действия — 30 дней с момента активации.</p>
-            <button className="createAdvertBlue" id="createAdvertBlue">Создать объявление</button>
-      </div>
+    <div className="m-auto mt-10 border border-gray-300 border-solid w-10/12 h-80 bg-whitesmoke rounded-sm">
+      <nav className="flex justify-around items-baseline pt-8">
+        <Link className="yourAdsActivePage hover:bg-blue focus:bg-blue" to="active-ads-page" id="yourAdsActivePage">Активные</Link>
+        <Link className="yourAdsNonActivePage  hover:bg-blue  focus:bg-blue" to="nonActive-ads-page" id="yourAdsNonActivePage">Неактивные</Link>
+        <Link className="yourAdsNonUnpaidPage  hover:bg-blue  focus:bg-blue" to="ads-non-unpaid-page" id="yourAdsNonUnpaidPage">Неоплаченные</Link>
+        <Link className="yourAdsNonAwaitingPage  hover:bg-blue  focus:bg-blue" to="ads-non-awaiting-page" id="yourAdsNonAwaitingPage">Ожидающие</Link>
+      </nav>
+      
+      <div className="content">
+        <Outlet />
+      </div>      
     </div>
-
-    <div className="yourAdsPart" id="yourAdsNonActivePart">
-      <div className="yourAds_wrapper">
-        <p className="descAds">Неактивные объявления отображаются здесь до истечения их срока</p>
-          <p className="validityPeriod">Эти объявления видны всем. Срок их действия — 30 дней с момента активации.</p>
-          <button className="createAdvertBlue" id="createAdvertBlue">Создать объявление</button>
-        </div>
-    </div>
-
-    <div className="yourAdsPart" id="yourAdsNonUnpaidPart">
-      <div className="yourAds_wrapper">
-        <p className="descAds">Неоплаченные объявления остаются здесь пока вы не активируете их</p>
-          <p className="validityPeriod">Оплатите публикацию, чтобы активировать объявления в определенных категориях. Объявления останутся здесь, пока вы не сделаете это.</p>
-          <button className="createAdvertBlue" id="createAdvertBlue">Создать объявление</button>
-      </div>
-    </div>
-    <div className="yourAdsPart" id="yourAdsNonAwaitingPart">
-      <div className="yourAds_wrapper">
-        <p className="descAds">Объявления проходят модерацию в течение нескольких минут</p>
-          <p className="validityPeriod">Каждое объявление, которое вы созданное или редактируете, проходит быструю модерацию перед активацией.</p>
-          <button className="createAdvertBlue" id="createAdvertBlue">Создать объявление</button>
-      </div>
-    </div>
-  </div>
-</div>
   );
 };
 

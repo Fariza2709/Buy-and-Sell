@@ -14,7 +14,8 @@ module.exports = {
         'white': '#ffffff',
         'blue': '#93c5fd',
         'red': '#991b1b',
-        'gainsboro': '#dcdcdc'
+        'gainsboro': '#dcdcdc',
+        'whitesmoke': '#f5f5f5'
       },
       spacing: {
         '1040': '1040px',
